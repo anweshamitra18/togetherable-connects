@@ -642,11 +642,6 @@ const AnonymousChat = ({
 };
 
 export default AnonymousDatingPage;
-  match: any;
-  partnerNickname: string;
-  myNickname: string;
-  onEnd: () => void;
-  onReveal: (level: string) => void;
 }) => {
   const { user } = useAuth();
   const { messages, loading } = useAnonMessages(match.id);
