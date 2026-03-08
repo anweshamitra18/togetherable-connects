@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -41,6 +41,14 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
+          <Link
+            to="/messages"
+            className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors relative"
+            aria-label="Messages"
+          >
+            <MessageCircle className="w-5 h-5" />
+            <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-card" />
+          </Link>
           <Button variant="ghost" asChild>
             <Link to="/signup">Sign Up</Link>
           </Button>

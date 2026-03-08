@@ -10,6 +10,7 @@ import MatchingPage from "./pages/MatchingPage";
 import AboutPage from "./pages/AboutPage";
 import CommunityPage from "./pages/CommunityPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
+import MessagesPage from "./pages/MessagesPage";
 import SafetyPage from "./pages/SafetyPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/about" element={<AboutPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/subscription" element={<SubscriptionPage />} />
+          <Route path="/messages" element={<MessagesPage />} />
           <Route path="/safety" element={<SafetyPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
