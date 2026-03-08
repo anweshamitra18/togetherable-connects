@@ -642,8 +642,6 @@ const AnonymousChat = ({
 };
 
 export default AnonymousDatingPage;
-  match,
-  partnerNickname,
   myNickname,
   onEnd,
   onReveal,
