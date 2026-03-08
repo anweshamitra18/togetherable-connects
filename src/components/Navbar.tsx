@@ -11,6 +11,7 @@ const navItems = [
   { label: "About Us", path: "/about" },
   { label: "Community", path: "/community" },
   { label: "Subscription", path: "/subscription" },
+  { label: "Anonymous Dating", path: "/anonymous-dating" },
 ];
 
 const Navbar = () => {
