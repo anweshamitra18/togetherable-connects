@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   useAnonymousProfile,
   useActiveMatch,
@@ -11,6 +20,7 @@ import {
   sendAnonMessage,
   findMatch,
 } from "@/hooks/useAnonymousDating";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sparkles,
   Shield,
@@ -25,7 +35,16 @@ import {
   Heart,
   MessageCircle,
   Zap,
+  Flag,
+  Ban,
+  AlertTriangle,
+  MoreVertical,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast } from "sonner";
 
 const AnonymousDatingPage = () => {
@@ -280,6 +299,16 @@ const MatchingScreen = ({
   </div>
 );
 
+/* ─── Report Reasons ─── */
+const REPORT_REASONS = [
+  "Harassment or bullying",
+  "Inappropriate content",
+  "Spam or scam",
+  "Threatening behavior",
+  "Impersonation",
+  "Other",
+];
+
 /* ─── Anonymous Chat ─── */
 const AnonymousChat = ({
   match,
@@ -298,16 +327,74 @@ const AnonymousChat = ({
   const { messages, loading } = useAnonMessages(match.id);
   const [input, setInput] = useState("");
   const [showRevealMenu, setShowRevealMenu] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDetails, setReportDetails] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [blocked, setBlocked] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const partnerId = match.user1_id === user?.id ? match.user2_id : match.user1_id;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Check if already blocked
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("anonymous_blocks" as any)
+      .select("id")
+      .eq("blocker_id", user.id)
+      .eq("blocked_user_id", partnerId)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        if (data) setBlocked(true);
+      });
+  }, [user, partnerId]);
+
   const handleSend = async () => {
-    if (!input.trim() || !user) return;
+    if (!input.trim() || !user || blocked) return;
     await sendAnonMessage(match.id, user.id, input);
     setInput("");
+  };
+
+  const handleReport = async () => {
+    if (!reportReason || !user) return;
+    setSubmitting(true);
+    const { error } = await supabase.from("anonymous_reports" as any).insert({
+      reporter_id: user.id,
+      reported_user_id: partnerId,
+      match_id: match.id,
+      reason: reportReason,
+      details: reportDetails.trim() || null,
+    } as any);
+    setSubmitting(false);
+    if (error) {
+      toast.error("Failed to submit report. Please try again.");
+    } else {
+      toast.success("Report submitted. Our team will review it shortly.");
+      setReportOpen(false);
+      setReportReason("");
+      setReportDetails("");
+    }
+  };
+
+  const handleBlock = async () => {
+    if (!user) return;
+    const { error } = await supabase.from("anonymous_blocks" as any).insert({
+      blocker_id: user.id,
+      blocked_user_id: partnerId,
+      match_id: match.id,
+    } as any);
+    if (error) {
+      toast.error("Failed to block user.");
+    } else {
+      setBlocked(true);
+      toast.success(`${partnerNickname} has been blocked. Ending session...`);
+      setTimeout(() => onEnd(), 1500);
+    }
   };
 
   const myRevealLevel =
@@ -344,13 +431,43 @@ const AnonymousChat = ({
           >
             <Eye className="w-4 h-4 text-muted-foreground" />
           </button>
-          <button
-            onClick={onEnd}
-            className="p-2 rounded-full hover:bg-destructive/10 transition-colors"
-            aria-label="End session"
-          >
-            <UserX className="w-4 h-4 text-destructive" />
-          </button>
+
+          {/* Safety menu */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="p-2 rounded-full hover:bg-muted transition-colors"
+                aria-label="Safety options"
+              >
+                <MoreVertical className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48 p-1">
+              <button
+                onClick={() => setReportOpen(true)}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors text-foreground"
+              >
+                <Flag className="w-4 h-4 text-warning" />
+                Report User
+              </button>
+              <button
+                onClick={handleBlock}
+                disabled={blocked}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive disabled:opacity-50"
+              >
+                <Ban className="w-4 h-4" />
+                {blocked ? "Blocked" : "Block User"}
+              </button>
+              <div className="border-t border-border my-1" />
+              <button
+                onClick={onEnd}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive"
+              >
+                <UserX className="w-4 h-4" />
+                End Session
+              </button>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -383,6 +500,14 @@ const AnonymousChat = ({
               ✨ {partnerNickname} has shared their {partnerRevealLevel === "photo" ? "photo" : "profile"}!
             </p>
           )}
+        </div>
+      )}
+
+      {/* Blocked banner */}
+      {blocked && (
+        <div className="bg-destructive/10 border-b border-destructive/20 px-4 py-2 flex items-center gap-2 text-sm text-destructive">
+          <Ban className="w-4 h-4" />
+          You have blocked this user. The session will end shortly.
         </div>
       )}
 
@@ -438,14 +563,15 @@ const AnonymousChat = ({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Type anonymously..."
+              placeholder={blocked ? "You blocked this user" : "Type anonymously..."}
               className="bg-transparent text-sm flex-1 outline-none"
               aria-label="Anonymous message input"
+              disabled={blocked}
             />
           </div>
           <button
             onClick={handleSend}
-            disabled={!input.trim()}
+            disabled={!input.trim() || blocked}
             className="p-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-warm disabled:opacity-50"
             aria-label="Send message"
           >
@@ -453,6 +579,64 @@ const AnonymousChat = ({
           </button>
         </div>
       </div>
+
+      {/* Report Dialog */}
+      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-warning" />
+              Report {partnerNickname}
+            </DialogTitle>
+            <DialogDescription>
+              Help us keep Togetherable safe. Your report is confidential and will be reviewed by our team.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Reason for report</label>
+              <div className="grid grid-cols-1 gap-2">
+                {REPORT_REASONS.map((reason) => (
+                  <button
+                    key={reason}
+                    onClick={() => setReportReason(reason)}
+                    className={`text-left px-3 py-2 rounded-lg text-sm border transition-colors ${
+                      reportReason === reason
+                        ? "border-primary bg-primary/10 text-foreground font-medium"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {reason}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Additional details (optional)</label>
+              <Textarea
+                value={reportDetails}
+                onChange={(e) => setReportDetails(e.target.value)}
+                placeholder="Provide more context about what happened..."
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setReportOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleReport}
+              disabled={!reportReason || submitting}
+            >
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Flag className="w-4 h-4 mr-1" />}
+              Submit Report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
