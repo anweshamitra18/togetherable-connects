@@ -642,10 +642,6 @@ const AnonymousChat = ({
 };
 
 export default AnonymousDatingPage;
-  myNickname,
-  onEnd,
-  onReveal,
-}: {
   match: any;
   partnerNickname: string;
   myNickname: string;
