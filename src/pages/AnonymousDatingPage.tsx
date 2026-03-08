@@ -299,8 +299,349 @@ const MatchingScreen = ({
   </div>
 );
 
+/* ─── Report Reasons ─── */
+const REPORT_REASONS = [
+  "Harassment or bullying",
+  "Inappropriate content",
+  "Spam or scam",
+  "Threatening behavior",
+  "Impersonation",
+  "Other",
+];
+
 /* ─── Anonymous Chat ─── */
 const AnonymousChat = ({
+  match,
+  partnerNickname,
+  myNickname,
+  onEnd,
+  onReveal,
+}: {
+  match: any;
+  partnerNickname: string;
+  myNickname: string;
+  onEnd: () => void;
+  onReveal: (level: string) => void;
+}) => {
+  const { user } = useAuth();
+  const { messages, loading } = useAnonMessages(match.id);
+  const [input, setInput] = useState("");
+  const [showRevealMenu, setShowRevealMenu] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDetails, setReportDetails] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [blocked, setBlocked] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const partnerId = match.user1_id === user?.id ? match.user2_id : match.user1_id;
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Check if already blocked
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("anonymous_blocks" as any)
+      .select("id")
+      .eq("blocker_id", user.id)
+      .eq("blocked_user_id", partnerId)
+      .maybeSingle()
+      .then(({ data }: any) => {
+        if (data) setBlocked(true);
+      });
+  }, [user, partnerId]);
+
+  const handleSend = async () => {
+    if (!input.trim() || !user || blocked) return;
+    await sendAnonMessage(match.id, user.id, input);
+    setInput("");
+  };
+
+  const handleReport = async () => {
+    if (!reportReason || !user) return;
+    setSubmitting(true);
+    const { error } = await supabase.from("anonymous_reports" as any).insert({
+      reporter_id: user.id,
+      reported_user_id: partnerId,
+      match_id: match.id,
+      reason: reportReason,
+      details: reportDetails.trim() || null,
+    } as any);
+    setSubmitting(false);
+    if (error) {
+      toast.error("Failed to submit report. Please try again.");
+    } else {
+      toast.success("Report submitted. Our team will review it shortly.");
+      setReportOpen(false);
+      setReportReason("");
+      setReportDetails("");
+    }
+  };
+
+  const handleBlock = async () => {
+    if (!user) return;
+    const { error } = await supabase.from("anonymous_blocks" as any).insert({
+      blocker_id: user.id,
+      blocked_user_id: partnerId,
+      match_id: match.id,
+    } as any);
+    if (error) {
+      toast.error("Failed to block user.");
+    } else {
+      setBlocked(true);
+      toast.success(`${partnerNickname} has been blocked. Ending session...`);
+      setTimeout(() => onEnd(), 1500);
+    }
+  };
+
+  const myRevealLevel =
+    match.user1_id === user?.id ? match.user1_reveal_level : match.user2_reveal_level;
+  const partnerRevealLevel =
+    match.user1_id === user?.id ? match.user2_reveal_level : match.user1_reveal_level;
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem)]">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center">
+          <EyeOff className="w-5 h-5 text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-heading font-bold text-sm truncate">{partnerNickname}</h3>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">
+              Compatibility: {match.compatibility_score}%
+            </span>
+            <div className="w-12 h-1.5 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full bg-success rounded-full"
+                style={{ width: `${match.compatibility_score}%` }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setShowRevealMenu(!showRevealMenu)}
+            className="p-2 rounded-full hover:bg-muted transition-colors"
+            aria-label="Reveal options"
+          >
+            <Eye className="w-4 h-4 text-muted-foreground" />
+          </button>
+
+          {/* Safety menu */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="p-2 rounded-full hover:bg-muted transition-colors"
+                aria-label="Safety options"
+              >
+                <MoreVertical className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-48 p-1">
+              <button
+                onClick={() => setReportOpen(true)}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors text-foreground"
+              >
+                <Flag className="w-4 h-4 text-warning" />
+                Report User
+              </button>
+              <button
+                onClick={handleBlock}
+                disabled={blocked}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive disabled:opacity-50"
+              >
+                <Ban className="w-4 h-4" />
+                {blocked ? "Blocked" : "Block User"}
+              </button>
+              <div className="border-t border-border my-1" />
+              <button
+                onClick={onEnd}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive"
+              >
+                <UserX className="w-4 h-4" />
+                End Session
+              </button>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+
+      {/* Reveal menu */}
+      {showRevealMenu && (
+        <div className="border-b border-border bg-card/50 p-3 space-y-2">
+          <p className="text-xs text-muted-foreground font-medium">Reveal your identity:</p>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { level: "anonymous", label: "Stay Anonymous", icon: EyeOff },
+              { level: "photo", label: "Share Photo", icon: Image },
+              { level: "profile", label: "Share Profile", icon: UserCheck },
+            ].map(({ level, label, icon: Icon }) => (
+              <button
+                key={level}
+                onClick={() => { onReveal(level); setShowRevealMenu(false); }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                  myRevealLevel === level
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                <Icon className="w-3 h-3" />
+                {label}
+              </button>
+            ))}
+          </div>
+          {partnerRevealLevel !== "anonymous" && (
+            <p className="text-xs text-success">
+              ✨ {partnerNickname} has shared their {partnerRevealLevel === "photo" ? "photo" : "profile"}!
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Blocked banner */}
+      {blocked && (
+        <div className="bg-destructive/10 border-b border-destructive/20 px-4 py-2 flex items-center gap-2 text-sm text-destructive">
+          <Ban className="w-4 h-4" />
+          You have blocked this user. The session will end shortly.
+        </div>
+      )}
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background">
+        <div className="text-center space-y-2 py-4">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-semibold">
+            <Shield className="w-3 h-3" /> Anonymous & Private
+          </div>
+          <p className="text-xs text-muted-foreground max-w-xs mx-auto">
+            You're chatting anonymously as <strong>{myNickname}</strong> with <strong>{partnerNickname}</strong>.
+            Compatibility: {match.compatibility_score}%
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="text-center text-muted-foreground text-sm py-8">Loading messages...</div>
+        ) : messages.length === 0 ? (
+          <div className="text-center text-muted-foreground text-sm py-8">
+            <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-40" />
+            No messages yet. Break the ice! 🎭
+          </div>
+        ) : (
+          messages.map((msg) => {
+            const isMe = msg.sender_id === user?.id;
+            return (
+              <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
+                    isMe
+                      ? "bg-primary text-primary-foreground rounded-br-md"
+                      : "bg-card text-card-foreground shadow-card rounded-bl-md"
+                  }`}
+                >
+                  <span>{msg.content}</span>
+                  <p className={`text-[10px] mt-1 ${isMe ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                    {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input bar */}
+      <div className="border-t border-border bg-card p-3">
+        <div className="flex items-center gap-2">
+          <div className="flex-1 flex items-center bg-background border border-input rounded-full px-4 py-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder={blocked ? "You blocked this user" : "Type anonymously..."}
+              className="bg-transparent text-sm flex-1 outline-none"
+              aria-label="Anonymous message input"
+              disabled={blocked}
+            />
+          </div>
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || blocked}
+            className="p-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-warm disabled:opacity-50"
+            aria-label="Send message"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Report Dialog */}
+      <Dialog open={reportOpen} onOpenChange={setReportOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-warning" />
+              Report {partnerNickname}
+            </DialogTitle>
+            <DialogDescription>
+              Help us keep Togetherable safe. Your report is confidential and will be reviewed by our team.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Reason for report</label>
+              <div className="grid grid-cols-1 gap-2">
+                {REPORT_REASONS.map((reason) => (
+                  <button
+                    key={reason}
+                    onClick={() => setReportReason(reason)}
+                    className={`text-left px-3 py-2 rounded-lg text-sm border transition-colors ${
+                      reportReason === reason
+                        ? "border-primary bg-primary/10 text-foreground font-medium"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {reason}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Additional details (optional)</label>
+              <Textarea
+                value={reportDetails}
+                onChange={(e) => setReportDetails(e.target.value)}
+                placeholder="Provide more context about what happened..."
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setReportOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleReport}
+              disabled={!reportReason || submitting}
+            >
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Flag className="w-4 h-4 mr-1" />}
+              Submit Report
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default AnonymousDatingPage;
   match,
   partnerNickname,
   myNickname,
