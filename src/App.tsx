@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProfilePage from "./pages/ProfilePage";
+import PublicProfilePage from "./pages/PublicProfilePage";
 import Index from "./pages/Index";
 import MatchingPage from "./pages/MatchingPage";
 import AboutPage from "./pages/AboutPage";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/subscription" element={<SubscriptionPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:userId" element={<PublicProfilePage />} />
             <Route path="/safety" element={<SafetyPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />

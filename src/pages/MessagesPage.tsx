@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useConversations } from "@/hooks/useMessaging";
 import ConversationList from "@/components/chat/ConversationList";
@@ -9,8 +10,14 @@ import { Button } from "@/components/ui/button";
 
 const MessagesPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(searchParams.get("conv"));
   const { conversations, loading, refetch } = useConversations();
+
+  useEffect(() => {
+    const conv = searchParams.get("conv");
+    if (conv) setSelectedId(conv);
+  }, [searchParams]);
 
   if (authLoading) {
     return (
