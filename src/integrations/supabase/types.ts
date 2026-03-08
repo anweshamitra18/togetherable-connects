@@ -101,41 +101,65 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accessibility_preferences: string[] | null
           avatar_url: string | null
           bio: string | null
           communication_style: string | null
+          contact_number: string | null
+          country: string | null
           created_at: string
+          disability_percentage: string | null
           disability_type: string | null
           display_name: string | null
+          gender_identity: string | null
           id: string
           interests: string[] | null
+          location: string | null
           mobility_aids: string | null
+          onboarding_completed: boolean | null
+          pronouns: string | null
           support_needs: string | null
           updated_at: string
         }
         Insert: {
+          accessibility_preferences?: string[] | null
           avatar_url?: string | null
           bio?: string | null
           communication_style?: string | null
+          contact_number?: string | null
+          country?: string | null
           created_at?: string
+          disability_percentage?: string | null
           disability_type?: string | null
           display_name?: string | null
+          gender_identity?: string | null
           id: string
           interests?: string[] | null
+          location?: string | null
           mobility_aids?: string | null
+          onboarding_completed?: boolean | null
+          pronouns?: string | null
           support_needs?: string | null
           updated_at?: string
         }
         Update: {
+          accessibility_preferences?: string[] | null
           avatar_url?: string | null
           bio?: string | null
           communication_style?: string | null
+          contact_number?: string | null
+          country?: string | null
           created_at?: string
+          disability_percentage?: string | null
           disability_type?: string | null
           display_name?: string | null
+          gender_identity?: string | null
           id?: string
           interests?: string[] | null
+          location?: string | null
           mobility_aids?: string | null
+          onboarding_completed?: boolean | null
+          pronouns?: string | null
           support_needs?: string | null
           updated_at?: string
         }
