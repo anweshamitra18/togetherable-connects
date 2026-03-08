@@ -15,6 +15,7 @@ import CommunityPage from "./pages/CommunityPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import MessagesPage from "./pages/MessagesPage";
 import SafetyPage from "./pages/SafetyPage";
+import AnonymousDatingPage from "./pages/AnonymousDatingPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:userId" element={<PublicProfilePage />} />
             <Route path="/safety" element={<SafetyPage />} />
+            <Route path="/anonymous-dating" element={<AnonymousDatingPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFound />} />

@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      anonymous_matches: {
+        Row: {
+          compatibility_score: number
+          created_at: string
+          ended_at: string | null
+          id: string
+          status: string
+          user1_id: string
+          user1_reveal_level: string
+          user2_id: string
+          user2_reveal_level: string
+        }
+        Insert: {
+          compatibility_score?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          status?: string
+          user1_id: string
+          user1_reveal_level?: string
+          user2_id: string
+          user2_reveal_level?: string
+        }
+        Update: {
+          compatibility_score?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          status?: string
+          user1_id?: string
+          user1_reveal_level?: string
+          user2_id?: string
+          user2_reveal_level?: string
+        }
+        Relationships: []
+      }
+      anonymous_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          match_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          match_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          match_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anonymous_messages_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "anonymous_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      anonymous_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          nickname: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          nickname: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          nickname?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_participants: {
         Row: {
           conversation_id: string
@@ -170,6 +262,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_anon_match_member: {
+        Args: { _match_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_conversation_member: {
         Args: { _conversation_id: string; _user_id: string }
         Returns: boolean
