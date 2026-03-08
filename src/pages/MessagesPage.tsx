@@ -10,8 +10,14 @@ import { Button } from "@/components/ui/button";
 
 const MessagesPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(searchParams.get("conv"));
   const { conversations, loading, refetch } = useConversations();
+
+  useEffect(() => {
+    const conv = searchParams.get("conv");
+    if (conv) setSelectedId(conv);
+  }, [searchParams]);
 
   if (authLoading) {
     return (
