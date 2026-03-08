@@ -37,6 +37,7 @@ const App = () => (
             <Route path="/subscription" element={<SubscriptionPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:userId" element={<PublicProfilePage />} />
             <Route path="/safety" element={<SafetyPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
