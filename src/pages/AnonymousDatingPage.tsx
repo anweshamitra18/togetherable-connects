@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   useAnonymousProfile,
   useActiveMatch,
@@ -11,6 +20,7 @@ import {
   sendAnonMessage,
   findMatch,
 } from "@/hooks/useAnonymousDating";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sparkles,
   Shield,
@@ -25,7 +35,16 @@ import {
   Heart,
   MessageCircle,
   Zap,
+  Flag,
+  Ban,
+  AlertTriangle,
+  MoreVertical,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast } from "sonner";
 
 const AnonymousDatingPage = () => {
