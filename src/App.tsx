@@ -15,6 +15,7 @@ import CommunityPage from "./pages/CommunityPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import MessagesPage from "./pages/MessagesPage";
 import SafetyPage from "./pages/SafetyPage";
+import AnonymousDatingPage from "./pages/AnonymousDatingPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
