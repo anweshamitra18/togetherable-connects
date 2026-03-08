@@ -10,6 +10,7 @@ import MatchingPage from "./pages/MatchingPage";
 import AboutPage from "./pages/AboutPage";
 import CommunityPage from "./pages/CommunityPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
+import MessagesPage from "./pages/MessagesPage";
 import SafetyPage from "./pages/SafetyPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
