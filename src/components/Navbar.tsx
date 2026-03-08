@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, MessageCircle } from "lucide-react";
+import { Heart, Menu, X, MessageCircle, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -14,6 +16,12 @@ const navItems = [
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Signed out");
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
@@ -23,7 +31,6 @@ const Navbar = () => {
           <Heart className="w-5 h-5 text-heart animate-pulse-heart fill-heart" />
         </Link>
 
-        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
             <Link
@@ -41,23 +48,32 @@ const Navbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Link
-            to="/messages"
-            className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors relative"
-            aria-label="Messages"
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-card" />
-          </Link>
-          <Button variant="ghost" asChild>
-            <Link to="/signup">Sign Up</Link>
-          </Button>
-          <Button variant="hero" size="sm" asChild>
-            <Link to="/login">Login</Link>
-          </Button>
+          {user ? (
+            <>
+              <Link
+                to="/messages"
+                className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors relative"
+                aria-label="Messages"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-card" />
+              </Link>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogOut className="w-4 h-4 mr-1" /> Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/signup">Sign Up</Link>
+              </Button>
+              <Button variant="hero" size="sm" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+            </>
+          )}
         </div>
 
-        {/* Mobile hamburger */}
         <button
           className="md:hidden p-2 text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -67,7 +83,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile nav */}
       {mobileOpen && (
         <nav className="md:hidden border-t border-border bg-card p-4 space-y-2">
           {navItems.map((item) => (
@@ -85,12 +100,20 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="flex gap-2 pt-2">
-            <Button variant="ghost" className="flex-1" asChild>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
-            <Button variant="hero" className="flex-1" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
+            {user ? (
+              <Button variant="ghost" className="flex-1" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
+                Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" className="flex-1" asChild>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+                <Button variant="hero" className="flex-1" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+              </>
+            )}
           </div>
         </nav>
       )}

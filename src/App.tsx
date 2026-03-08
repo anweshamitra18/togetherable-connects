@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Index from "./pages/Index";
@@ -24,20 +25,22 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/matching" element={<MatchingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/subscription" element={<SubscriptionPage />} />
-          <Route path="/messages" element={<MessagesPage />} />
-          <Route path="/safety" element={<SafetyPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/matching" element={<MatchingPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/subscription" element={<SubscriptionPage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/safety" element={<SafetyPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
