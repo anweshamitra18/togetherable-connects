@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, MessageCircle, LogOut } from "lucide-react";
+import { Heart, Menu, X, MessageCircle, LogOut, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,6 +57,13 @@ const Navbar = () => {
               >
                 <MessageCircle className="w-5 h-5" />
                 <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-card" />
+              </Link>
+              <Link
+                to="/profile"
+                className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+                aria-label="Profile"
+              >
+                <UserCircle className="w-5 h-5" />
               </Link>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="w-4 h-4 mr-1" /> Sign Out
