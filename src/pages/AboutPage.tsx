@@ -1,5 +1,5 @@
-import { Heart, Users, Shield, Sparkles } from "lucide-react";
-import heroCommunity from "@/assets/hero-community.jpg";
+import { Heart, Users, Shield, Sparkles, Target } from "lucide-react";
+import teamAasha from "@/assets/team-aasha.jpeg";
 
 const values = [
   { icon: Heart, title: "Inclusion First", desc: "We believe everyone deserves love and connection, regardless of ability." },
@@ -8,35 +8,59 @@ const values = [
   { icon: Sparkles, title: "Innovation", desc: "AI-powered matching that understands accessibility needs and lifestyle alignment." },
 ];
 
+const teamMembers = [
+  { name: "Atreyee Das", role: "CTO (Chief Technology Officer)" },
+  { name: "Ankita Singh", role: "Community Manager" },
+  { name: "Shreeyanka Sahoo", role: "Marketing Lead" },
+  { name: "Anwesha Mitra", role: "Founder & CEO" },
+];
+
 const AboutPage = () => (
   <div className="min-h-screen">
     <section className="bg-gradient-hero py-20">
       <div className="container text-center max-w-3xl">
         <h1 className="font-heading text-4xl md:text-5xl font-extrabold">About <span className="text-gradient-primary">TogetherAble</span></h1>
         <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
-          TogetherAble is redefining the dating experience for individuals with disabilities 
-          and creating an inclusive environment for all users.
+          We are a passionate and multidisciplinary team of four women, united by a common goal — creating meaningful social impact through inclusive design and ethical technology.
         </p>
       </div>
     </section>
 
+    {/* Team Aasha Section */}
     <section className="py-20">
       <div className="container grid md:grid-cols-2 gap-12 items-center">
-        <div className="rounded-3xl overflow-hidden shadow-warm">
-          <img src={heroCommunity} alt="TogetherAble community" className="w-full h-auto" />
+        <div className="space-y-2">
+          <div className="rounded-3xl overflow-hidden shadow-warm">
+            <img src={teamAasha} alt="Team Aasha — the founding team of TogetherAble" className="w-full h-auto" />
+          </div>
+          <div className="flex flex-wrap gap-2 justify-center pt-3">
+            {teamMembers.map((m) => (
+              <span key={m.name} className="inline-flex flex-col items-center bg-secondary text-secondary-foreground rounded-xl px-3 py-2 text-center">
+                <span className="text-sm font-bold font-heading">{m.name}</span>
+                <span className="text-xs text-muted-foreground">{m.role}</span>
+              </span>
+            ))}
+          </div>
         </div>
-        <div>
-          <h2 className="font-heading text-3xl font-bold">Our Mission</h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            We started TogetherAble because we saw a gap in the dating world. People with 
-            disabilities deserve platforms that understand their unique needs — from accessible 
-            interfaces to intelligent matching that considers communication styles, support needs, 
-            and lifestyle compatibility.
-          </p>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Our team includes disability advocates, accessibility experts, and technologists 
-            committed to building the most inclusive dating experience possible.
-          </p>
+        <div className="space-y-6">
+          <div>
+            <h2 className="font-heading text-3xl font-bold">Meet <span className="text-gradient-primary">Team Aasha</span></h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              At TogetherAble, we are a passionate and multidisciplinary team of four women, each contributing unique skills and perspectives to drive innovation and inclusivity. From technology to community building, marketing to leadership, we are united by a common goal — creating a meaningful social impact through inclusive design and ethical technology.
+            </p>
+            <p className="mt-4 text-muted-foreground leading-relaxed">
+              Our diverse expertise allows us to approach challenges holistically and craft solutions that empower all individuals, especially those often underrepresented in tech spaces.
+            </p>
+          </div>
+          <div className="bg-card rounded-2xl p-6 shadow-card border-l-4 border-primary">
+            <div className="flex items-center gap-2 mb-3">
+              <Target className="w-5 h-5 text-primary" />
+              <h3 className="font-heading text-lg font-bold">Our Mission</h3>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">
+              To create inclusive, accessible tech solutions that empower communities and promote digital equity for all.
+            </p>
+          </div>
         </div>
       </div>
     </section>
