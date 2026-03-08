@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProfilePage from "./pages/ProfilePage";
+import PublicProfilePage from "./pages/PublicProfilePage";
 import Index from "./pages/Index";
 import MatchingPage from "./pages/MatchingPage";
 import AboutPage from "./pages/AboutPage";
