@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      anonymous_blocks: {
+        Row: {
+          blocked_user_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+          match_id: string
+        }
+        Insert: {
+          blocked_user_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+          match_id: string
+        }
+        Update: {
+          blocked_user_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+          match_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anonymous_blocks_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "anonymous_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       anonymous_matches: {
         Row: {
           compatibility_score: number
@@ -105,6 +137,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      anonymous_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          match_id: string
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          match_id: string
+          reason: string
+          reported_user_id: string
+          reporter_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          match_id?: string
+          reason?: string
+          reported_user_id?: string
+          reporter_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anonymous_reports_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "anonymous_matches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       conversation_participants: {
         Row: {
