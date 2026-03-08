@@ -33,11 +33,10 @@ const Index = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
-                Love Without <span className="text-gradient-primary">Limits</span>
+                Connection Without <span className="text-gradient-primary">Barriers.</span>
               </h1>
               <p className="mt-5 text-lg text-muted-foreground max-w-lg leading-relaxed">
-                TogetherAble is the inclusive dating platform that celebrates every ability. 
-                Find meaningful connections with people who truly understand you.
+                A safe and inclusive place for everyone to meet, talk, and belong — discovering real compatibility before revealing who you are.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button variant="hero" size="lg" asChild>
