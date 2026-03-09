@@ -35,7 +35,7 @@ const plans = [
   },
   {
     name: "Premium+",
-    price: "$19.99",
+    price: "$10",
     period: "/month",
     features: [
       "Everything in Premium",
