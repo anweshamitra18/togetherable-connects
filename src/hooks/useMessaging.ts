@@ -54,10 +54,8 @@ export function useConversations() {
       .neq("user_id", user.id);
 
     const otherUserIds = [...new Set(otherParticipants?.map((p) => p.user_id) || [])];
-    const { data: profiles } = await (supabase
-      .from("public_profiles" as any)
-      .select("id, display_name, avatar_url")
-      .in("id", otherUserIds) as any) as { data: { id: string; display_name: string; avatar_url: string }[] | null };
+    const { data: profiles } = await supabase
+      .rpc("get_public_profiles", { _ids: otherUserIds }) as { data: { id: string; display_name: string; avatar_url: string }[] | null };
 
     const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
 
