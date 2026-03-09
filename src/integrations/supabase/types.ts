@@ -332,65 +332,32 @@ export type Database = {
       }
     }
     Views: {
-      public_anonymous_profiles: {
-        Row: {
-          created_at: string | null
-          id: string | null
-          is_active: boolean | null
-          nickname: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string | null
-          is_active?: boolean | null
-          nickname?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string | null
-          is_active?: boolean | null
-          nickname?: string | null
-        }
-        Relationships: []
-      }
-      public_profiles: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          communication_style: string | null
-          disability_type: string | null
-          display_name: string | null
-          id: string | null
-          interests: string[] | null
-          mobility_aids: string | null
-          support_needs: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          communication_style?: string | null
-          disability_type?: string | null
-          display_name?: string | null
-          id?: string | null
-          interests?: string[] | null
-          mobility_aids?: string | null
-          support_needs?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          communication_style?: string | null
-          disability_type?: string | null
-          display_name?: string | null
-          id?: string | null
-          interests?: string[] | null
-          mobility_aids?: string | null
-          support_needs?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_public_anonymous_profiles: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          is_active: boolean
+          nickname: string
+        }[]
+      }
+      get_public_profiles: {
+        Args: { _ids?: string[] }
+        Returns: {
+          avatar_url: string
+          bio: string
+          communication_style: string
+          disability_type: string
+          display_name: string
+          id: string
+          interests: string[]
+          mobility_aids: string
+          support_needs: string
+        }[]
+      }
       is_anon_match_member: {
         Args: { _match_id: string; _user_id: string }
         Returns: boolean
