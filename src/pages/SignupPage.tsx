@@ -115,16 +115,12 @@ const SignupPage = () => {
       return;
     }
 
-    // After signup, update the profile with additional fields via a separate call
-    // The profile trigger will create the row; we update after a brief delay
-    // For now, store in localStorage to update after email confirmation
+    // Store only non-sensitive preferences in localStorage for post-confirmation profile update
+    // Sensitive fields (contact_number, disability_percentage, gender_identity, pronouns)
+    // will be collected on the profile page after login
     const onboardingData = {
-      gender_identity: finalGender,
-      pronouns: finalPronouns,
       country,
       location,
-      contact_number: contactNumber,
-      disability_percentage: disabilityPercentage,
       interests: [...selectedInterests, ...communityTags],
       accessibility_preferences: accessibilityPrefs,
       onboarding_completed: true,

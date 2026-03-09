@@ -332,7 +332,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          communication_style: string | null
+          disability_type: string | null
+          display_name: string | null
+          id: string | null
+          interests: string[] | null
+          mobility_aids: string | null
+          support_needs: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          communication_style?: string | null
+          disability_type?: string | null
+          display_name?: string | null
+          id?: string | null
+          interests?: string[] | null
+          mobility_aids?: string | null
+          support_needs?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          communication_style?: string | null
+          disability_type?: string | null
+          display_name?: string | null
+          id?: string | null
+          interests?: string[] | null
+          mobility_aids?: string | null
+          support_needs?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       is_anon_match_member: {
