@@ -55,7 +55,7 @@ export function useConversations() {
 
     const otherUserIds = [...new Set(otherParticipants?.map((p) => p.user_id) || [])];
     const { data: profiles } = await supabase
-      .from("profiles")
+      .from("public_profiles" as any)
       .select("id, display_name, avatar_url")
       .in("id", otherUserIds);
 
