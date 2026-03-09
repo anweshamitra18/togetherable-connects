@@ -332,6 +332,27 @@ export type Database = {
       }
     }
     Views: {
+      public_anonymous_profiles: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          is_active: boolean | null
+          nickname: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          nickname?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          nickname?: string | null
+        }
+        Relationships: []
+      }
       public_profiles: {
         Row: {
           avatar_url: string | null
