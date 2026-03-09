@@ -30,12 +30,12 @@ const PublicProfilePage = () => {
 
   useEffect(() => {
     if (!userId) return;
-    supabase
+    (supabase
       .from("public_profiles" as any)
       .select("id, display_name, avatar_url, bio, disability_type, mobility_aids, communication_style, support_needs, interests")
       .eq("id", userId)
-      .single()
-      .then(({ data }) => {
+      .single() as any)
+      .then(({ data }: any) => {
         setProfile(data);
         setLoading(false);
       });
