@@ -54,10 +54,8 @@ export function useConversations() {
       .neq("user_id", user.id);
 
     const otherUserIds = [...new Set(otherParticipants?.map((p) => p.user_id) || [])];
-    const { data: profiles } = await (supabase
-      .from("public_profiles" as any)
-      .select("id, display_name, avatar_url")
-      .in("id", otherUserIds) as any) as { data: { id: string; display_name: string; avatar_url: string }[] | null };
+    const { data: profiles } = await supabase
+      .rpc("get_public_profiles", { _ids: otherUserIds }) as { data: { id: string; display_name: string; avatar_url: string }[] | null };
 
     const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
 
@@ -191,22 +189,13 @@ export async function createConversation(userId: string, otherUserId: string) {
     if (shared?.length) return shared[0].conversation_id;
   }
 
-  // Create new conversation
-  const { data: conv, error: convError } = await supabase
-    .from("conversations")
-    .insert({})
-    .select("id")
-    .single();
+  // Create new conversation with participant via secure function
+  const { data: convId, error: convError } = await supabase
+    .rpc("create_conversation_with_participant", { _other_user_id: otherUserId });
 
-  if (convError || !conv) throw convError;
+  if (convError || !convId) throw convError;
 
-  // Add both participants
-  await supabase.from("conversation_participants").insert([
-    { conversation_id: conv.id, user_id: userId },
-    { conversation_id: conv.id, user_id: otherUserId },
-  ]);
-
-  return conv.id;
+  return convId as string;
 }
 
 function getTimeAgo(date: Date): string {

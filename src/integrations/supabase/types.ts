@@ -332,44 +332,36 @@ export type Database = {
       }
     }
     Views: {
-      public_profiles: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          communication_style: string | null
-          disability_type: string | null
-          display_name: string | null
-          id: string | null
-          interests: string[] | null
-          mobility_aids: string | null
-          support_needs: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          communication_style?: string | null
-          disability_type?: string | null
-          display_name?: string | null
-          id?: string | null
-          interests?: string[] | null
-          mobility_aids?: string | null
-          support_needs?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          communication_style?: string | null
-          disability_type?: string | null
-          display_name?: string | null
-          id?: string | null
-          interests?: string[] | null
-          mobility_aids?: string | null
-          support_needs?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      create_conversation_with_participant: {
+        Args: { _other_user_id: string }
+        Returns: string
+      }
+      get_public_anonymous_profiles: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          is_active: boolean
+          nickname: string
+        }[]
+      }
+      get_public_profiles: {
+        Args: { _ids?: string[] }
+        Returns: {
+          avatar_url: string
+          bio: string
+          communication_style: string
+          disability_type: string
+          display_name: string
+          id: string
+          interests: string[]
+          mobility_aids: string
+          support_needs: string
+        }[]
+      }
       is_anon_match_member: {
         Args: { _match_id: string; _user_id: string }
         Returns: boolean
@@ -377,6 +369,10 @@ export type Database = {
       is_conversation_member: {
         Args: { _conversation_id: string; _user_id: string }
         Returns: boolean
+      }
+      update_own_reveal_level: {
+        Args: { _match_id: string; _new_level: string }
+        Returns: undefined
       }
     }
     Enums: {
