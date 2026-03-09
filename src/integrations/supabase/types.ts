@@ -335,6 +335,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_conversation_with_participant: {
+        Args: { _other_user_id: string }
+        Returns: string
+      }
       get_public_anonymous_profiles: {
         Args: never
         Returns: {
