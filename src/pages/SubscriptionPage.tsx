@@ -18,7 +18,7 @@ const plans = [
   },
   {
     name: "Premium",
-    price: "$9.99",
+    price: "$2",
     period: "/month",
     popular: true,
     features: [
@@ -35,7 +35,7 @@ const plans = [
   },
   {
     name: "Premium+",
-    price: "$19.99",
+    price: "$10",
     period: "/month",
     features: [
       "Everything in Premium",
