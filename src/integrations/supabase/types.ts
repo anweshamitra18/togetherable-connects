@@ -370,6 +370,10 @@ export type Database = {
         Args: { _conversation_id: string; _user_id: string }
         Returns: boolean
       }
+      update_own_reveal_level: {
+        Args: { _match_id: string; _new_level: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
