@@ -339,6 +339,7 @@ export type Database = {
         Args: { _other_user_id: string }
         Returns: string
       }
+      end_anonymous_match: { Args: { _match_id: string }; Returns: undefined }
       get_public_anonymous_profiles: {
         Args: never
         Returns: {
