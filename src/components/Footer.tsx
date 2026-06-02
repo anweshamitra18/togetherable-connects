@@ -6,7 +6,7 @@ const Footer = () => (
     <div className="container">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2">
-          <span className="font-heading text-lg font-bold text-primary">TogetherAble</span>
+          <span className="font-heading text-lg font-bold text-primary">Affinity</span>
           <Heart className="w-4 h-4 text-heart fill-heart" />
         </div>
 
@@ -29,7 +29,7 @@ const Footer = () => (
       </div>
 
       <div className="mt-6 text-center text-xs text-muted-foreground">
-        <p>TogetherAble Limited &middot; hello@togetherable.com &middot; 9874567890</p>
+        <p>Affinity Limited &middot; hello@togetherable.com &middot; 9874567890</p>
       </div>
     </div>
   </footer>

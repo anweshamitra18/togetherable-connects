@@ -99,10 +99,10 @@ const Index = () => {
         <div className="container text-center">
           <h2 className="font-heading text-3xl md:text-4xl font-bold">Ready to Find Your Match?</h2>
           <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
-            Join thousands of users who have found meaningful connections through TogetherAble.
+            Join thousands of users who have found meaningful connections through Affinity.
           </p>
           <Button variant="hero" size="lg" className="mt-8" asChild>
-            <Link to="/signup">Join TogetherAble Today</Link>
+            <Link to="/signup">Join Affinity Today</Link>
           </Button>
         </div>
       </section>
