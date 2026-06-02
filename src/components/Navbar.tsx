@@ -28,7 +28,7 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2">
-          <span className="font-heading text-2xl font-extrabold text-primary">TogetherAble</span>
+          <span className="font-heading text-2xl font-extrabold text-primary">Affinity</span>
           <Heart className="w-5 h-5 text-heart animate-pulse-heart fill-heart" />
         </Link>
 

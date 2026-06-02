@@ -19,7 +19,7 @@ const AboutPage = () => (
   <div className="min-h-screen">
     <section className="bg-gradient-hero py-20">
       <div className="container text-center max-w-3xl">
-        <h1 className="font-heading text-4xl md:text-5xl font-extrabold">About <span className="text-gradient-primary">TogetherAble</span></h1>
+        <h1 className="font-heading text-4xl md:text-5xl font-extrabold">About <span className="text-gradient-primary">Affinity</span></h1>
         <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
           We are a passionate and multidisciplinary team of four women, united by a common goal — creating meaningful social impact through inclusive design and ethical technology.
         </p>
@@ -31,7 +31,7 @@ const AboutPage = () => (
       <div className="container grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-2">
           <div className="rounded-3xl overflow-hidden shadow-warm">
-            <img src={teamAasha} alt="Team Aasha — the founding team of TogetherAble" className="w-full h-auto" />
+            <img src={teamAasha} alt="Team Aasha — the founding team of Affinity" className="w-full h-auto" />
           </div>
           <div className="flex flex-wrap gap-2 justify-center pt-3">
             {teamMembers.map((m) => (
@@ -46,7 +46,7 @@ const AboutPage = () => (
           <div>
             <h2 className="font-heading text-3xl font-bold">Meet <span className="text-gradient-primary">Team Aasha</span></h2>
             <p className="mt-4 text-muted-foreground leading-relaxed">
-              At TogetherAble, we are a passionate and multidisciplinary team of four women, each contributing unique skills and perspectives to drive innovation and inclusivity. From technology to community building, marketing to leadership, we are united by a common goal — creating a meaningful social impact through inclusive design and ethical technology.
+              At Affinity, we are a passionate and multidisciplinary team of four women, each contributing unique skills and perspectives to drive innovation and inclusivity. From technology to community building, marketing to leadership, we are united by a common goal — creating a meaningful social impact through inclusive design and ethical technology.
             </p>
             <p className="mt-4 text-muted-foreground leading-relaxed">
               Our diverse expertise allows us to approach challenges holistically and craft solutions that empower all individuals, especially those often underrepresented in tech spaces.
