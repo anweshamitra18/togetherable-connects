@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+
+const safeNext = (value: string | null) =>
+  value && value.startsWith("/") && !value.startsWith("//") ? value : null;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +14,8 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const next = safeNext(searchParams.get("next"));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,9 +26,14 @@ const LoginPage = () => {
       toast.error(error.message);
     } else {
       toast.success("Welcome back!");
-      navigate("/messages");
+      if (next) {
+        window.location.href = next;
+      } else {
+        navigate("/messages");
+      }
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center py-10">
