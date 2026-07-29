@@ -18,6 +18,7 @@ import SafetyPage from "./pages/SafetyPage";
 import AnonymousDatingPage from "./pages/AnonymousDatingPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import OAuthConsentPage from "./pages/OAuthConsentPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/anonymous-dating" element={<AnonymousDatingPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/.lovable/oauth/consent" element={<OAuthConsentPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
