@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "sdk_version": "0.25.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ptwhpulmarayfhfsgryc.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "affinity-mcp",
+      "version": "0.1.0",
+      "title": "Affinity"
+    },
+    "tools": [
+      {
+        "name": "get_my_profile",
+        "title": "Get my profile",
+        "description": "Get the signed-in user's Affinity profile, including bio, interests and accessibility preferences.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_my_profile",
+        "title": "Update my profile",
+        "description": "Update fields on the signed-in user's Affinity profile. Only provided fields are changed.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "display_name": {
+              "type": "string",
+              "description": "Public display name."
+            },
+            "bio": {
+              "type": "string",
+              "description": "Short profile bio."
+            },
+            "pronouns": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "interests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of interests."
+            },
+            "accessibility_preferences": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Accessibility preferences."
+            },
+            "communication_style": {
+              "type": "string"
+            },
+            "support_needs": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "browse_profiles",
+        "title": "Browse member profiles",
+        "description": "Browse public Affinity member profiles to discover potential matches. Returns only public fields.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "description": "Maximum profiles to return (default 10, max 30)."
+            },
+            "interest": {
+              "type": "string",
+              "description": "Optional interest keyword to filter on."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_conversations",
+        "title": "List conversations",
+        "description": "List the signed-in user's Affinity conversations with the other participant's public profile.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "description": "Maximum conversations to return (default 20, max 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_messages",
+        "title": "List messages",
+        "description": "Read recent messages in one of the signed-in user's Affinity conversations, oldest first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "conversation_id": {
+              "type": "string",
+              "description": "The conversation UUID, from list_conversations."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Maximum messages to return (default 30, max 100)."
+            }
+          },
+          "required": [
+            "conversation_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "send_message",
+        "title": "Send message",
+        "description": "Send a text message as the signed-in user in one of their Affinity conversations.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "conversation_id": {
+              "type": "string",
+              "description": "The conversation UUID, from list_conversations."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Message text to send."
+            }
+          },
+          "required": [
+            "conversation_id",
+            "content"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
